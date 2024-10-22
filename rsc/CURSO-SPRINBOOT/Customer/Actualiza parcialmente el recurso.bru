@@ -1,0 +1,18 @@
+meta {
+  name: Actualiza parcialmente el recurso
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/customer
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 1,
+    "code": "code01"
+  }
+}
