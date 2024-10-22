@@ -3,6 +3,7 @@ package com.paymentchain.customer.controller;
 import com.paymentchain.customer.controller.helper.CustomerRestControllerHelper;
 import com.paymentchain.customer.entities.Customer;
 import com.paymentchain.customer.repository.CustomerRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +56,7 @@ public class CustomerRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Customer aCustomer)
+    public ResponseEntity<?> post(@Valid @RequestBody Customer aCustomer)
     {
         Customer savedCustomer = this.customerRepository.save(aCustomer);
         return ResponseEntity.ok(savedCustomer);
