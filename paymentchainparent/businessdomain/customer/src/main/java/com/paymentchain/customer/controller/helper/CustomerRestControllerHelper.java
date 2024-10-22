@@ -17,26 +17,24 @@ public class CustomerRestControllerHelper {
     {
         Customer updatedCustomer = new Customer();
         updatedCustomer.setId(fromBD.getId());
-        Customer from;
-        if (null != fromUser.getCode()) {
-            from = fromUser;
-        } else {
-            from = fromBD;
-        }
+
+        Customer from  = (null != fromUser.getCode())
+                ? fromUser
+                : fromBD
+        ;
         updatedCustomer.setCode(from.getCode());
 
-        if (null != fromUser.getPhone()) {
-            from = fromUser;
-        } else {
-            from = fromBD;
-        }
+        from  = (null != fromUser.getPhone())
+                ? fromUser
+                : fromBD
+        ;
         updatedCustomer.setPhone(from.getPhone());
 
-        if (null != fromUser.getName()) {
-            from = fromUser;
-        } else {
-            from = fromBD;
-        }
+
+        from  = (null != fromUser.getName())
+                ? fromUser
+                : fromBD
+        ;
         updatedCustomer.setName(from.getName());
 
         return updatedCustomer;
