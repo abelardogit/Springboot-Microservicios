@@ -17,15 +17,18 @@
 
     <modules>
         <module>customer</module>
+        <module>product</module>
     </modules>
 
     <properties>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-cloud-dependencies.version>2023.0.0</spring-cloud-dependencies.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <org.lombo.version>1.18.30</org.lombo.version>
         <org.springdoc.version>2.3.0</org.springdoc.version>
         <org.mockito.version>5.7.0</org.mockito.version>
-
     </properties>
 
     <dependencyManagement>

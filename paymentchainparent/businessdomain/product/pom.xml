@@ -9,10 +9,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.paymentchain.businessdomain.customer</groupId>
-    <artifactId>customer</artifactId>
+    <groupId>com.paymentchain.businessdomain.product</groupId>
+    <artifactId>product</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>customer</name>
+    <name>product</name>
 
     <build>
         <plugins>
