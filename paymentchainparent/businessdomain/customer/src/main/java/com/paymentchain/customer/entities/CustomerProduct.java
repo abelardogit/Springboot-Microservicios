@@ -17,4 +17,9 @@ public class CustomerProduct {
     private Customer customer;
     @Transient
     private String productName;
+
+    @Override
+    public String toString() {
+        return "id:" + id + " productId:" + productId;
+    }
 }
