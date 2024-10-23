@@ -25,12 +25,12 @@ public class ProductRestControllerHelper {
         }
         updatedProduct.setCode(from.getCode());
 
-        if (null != fromUser.getPhone()) {
+        if (null != fromUser.getCode()) {
             from = fromUser;
         } else {
             from = fromBD;
         }
-        updatedProduct.setPhone(from.getPhone());
+        updatedProduct.setCode(from.getCode());
 
         if (null != fromUser.getName()) {
             from = fromUser;
