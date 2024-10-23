@@ -1,7 +1,9 @@
 package com.paymentchain.customer.controller.helper;
 
 import com.paymentchain.customer.entities.Customer;
+import com.paymentchain.customer.http.WebClientProductClient;
 import com.paymentchain.customer.repository.CustomerRepository;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Optional;
 
@@ -38,6 +40,12 @@ public class CustomerRestControllerHelper {
         updatedCustomer.setName(from.getName());
 
         return updatedCustomer;
+    }
+
+    public static String getProductName(long id) {
+        WebClient webClient = WebClient.builder().build();
+        WebClientProductClient webClientProductClient = new WebClientProductClient(webClient);
+        return webClientProductClient.getProductName(id);
     }
 
 }
