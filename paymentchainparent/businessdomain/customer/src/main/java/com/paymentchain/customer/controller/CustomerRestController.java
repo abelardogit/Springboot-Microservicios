@@ -2,8 +2,8 @@ package com.paymentchain.customer.controller;
 
 import com.paymentchain.customer.controller.helper.CustomerRestControllerHelper;
 import com.paymentchain.customer.entities.Customer;
+import com.paymentchain.customer.entities.CustomerProduct;
 import com.paymentchain.customer.repository.CustomerRepository;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +21,7 @@ public class CustomerRestController {
     }
 
     @GetMapping()
-    public List<Customer> list()
-    {
-        System.out.println("hola2");
+    public List<Customer> list() {
         return this.customerRepository.findAll();
     }
 
@@ -34,6 +32,13 @@ public class CustomerRestController {
         if (null == aCustomer) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        List<CustomerProduct> products = aCustomer.getProducts();
+        products.forEach(p -> {
+            long productId = p.getProductId();
+            String productName = CustomerRestControllerHelper.getProductName(productId);
+            p.setProductName(productName);
+        });
 
         return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
 
@@ -56,8 +61,8 @@ public class CustomerRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@Valid @RequestBody Customer aCustomer)
-    {
+    public ResponseEntity<?> post(@RequestBody Customer aCustomer) {
+        aCustomer.getProducts().forEach(product -> product.setCustomer(aCustomer));
         Customer savedCustomer = this.customerRepository.save(aCustomer);
         return ResponseEntity.ok(savedCustomer);
     }
