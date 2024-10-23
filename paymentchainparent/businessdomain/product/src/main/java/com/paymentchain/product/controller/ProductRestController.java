@@ -2,7 +2,6 @@ package com.paymentchain.product.controller;
 
 import java.util.List;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +58,7 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@Valid @RequestBody Product aProduct)
+    public ResponseEntity<?> post(@RequestBody Product aProduct)
     {
         Product savedProduct = this.productRepository.save(aProduct);
         return ResponseEntity.ok(savedProduct);
