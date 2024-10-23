@@ -25,13 +25,13 @@ public class ProductRestController {
     @GetMapping()
     public List<Product> list()
     {
-        System.out.println("hola2");
         return this.productRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") long id)
     {
+        System.out.println(id);
         Product aProduct = ProductRestControllerHelper.getById(this.productRepository, id);
         if (null == aProduct) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
