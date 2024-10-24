@@ -1,0 +1,31 @@
+meta {
+  name: Create a product 2
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8081/product
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "id": 1,
+      "code": "01",
+      "name": "Cuenta horros"
+    }
+  
+   {
+      "id": 2,
+      "code": "005",
+      "name": "tarjeta credito"
+    }
+  
+  {
+      "id": 3,
+      "code": "00687l",
+      "name": "Puntos banco"
+    }
+}

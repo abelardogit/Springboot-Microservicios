@@ -1,0 +1,49 @@
+meta {
+  name: Create a transaction 2
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:8082/transaction
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 0,
+    "reference": "6524ld",
+    "ibanAccount": "000251487",
+    "date": "2022-08-15T11:36:07.683Z",
+    "amount": 450,
+    "fee": 2,
+    "description": "Consignación",
+    "status": "Liquidada",
+    "channel": "OFICINA"
+  }
+  
+  {
+    "id": 0,
+    "reference": "hg52487",
+    "ibanAccount": "000251487",
+    "date": "2022-11-10T15:20:00.437Z",
+    "amount": 100,
+    "fee": 3,
+    "description": "Retiro",
+    "status": "Rechazada",
+    "channel": "WEB"
+  }
+  
+  {
+    "id": 0,
+    "reference": "53254jks",
+    "ibanAccount": "000257849",
+    "date": "2022-11-10T15:20:00.437Z",
+    "amount": 100,
+    "fee": 3,
+    "description": "Retiro",
+    "status": "Liquidada",
+    "channel": "WEB"
+  }
+}
