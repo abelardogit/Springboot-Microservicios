@@ -3,6 +3,7 @@ package com.paymentchain.customer.controller;
 import com.paymentchain.customer.controller.helper.CustomerRestControllerHelper;
 import com.paymentchain.customer.entities.Customer;
 import com.paymentchain.customer.repository.CustomerRepository;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,24 @@ import java.util.List;
 public class CustomerRestController {
 
     private final CustomerRepository customerRepository;
+    private final Environment env;
 
-    public CustomerRestController(CustomerRepository customerRepository) {
+    public CustomerRestController(
+            CustomerRepository customerRepository,
+            Environment env
+    ) {
         this.customerRepository = customerRepository;
+        this.env = env;
+    }
+
+    /*
+    @Value("${custom.activeProfileName}")
+    private String profile;
+    */
+
+    @GetMapping("/check")
+    public String check() {
+        return "Hello, your current environment is " + this.env.getProperty("custom.activeProfileName");
     }
 
     @GetMapping()
