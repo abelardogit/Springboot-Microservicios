@@ -31,13 +31,26 @@ public class ProductRestController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") long id)
     {
-        System.out.println(id);
         Product aProduct = ProductRestControllerHelper.getById(this.productRepository, id);
         if (null == aProduct) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(aProduct, HttpStatus.FOUND);
+
+    }
+
+    @GetMapping("/getName/{id}")
+    public ResponseEntity<?> getNameById(@PathVariable("id") long id)
+    {
+        Product aProduct = ProductRestControllerHelper.getById(this.productRepository, id);
+        if (null == aProduct) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        String name = aProduct.getName();
+
+        return new ResponseEntity<>(name, HttpStatus.FOUND);
 
     }
 

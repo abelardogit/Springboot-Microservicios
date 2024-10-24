@@ -16,18 +16,20 @@ import static reactor.util.retry.Retry.backoff;
 @Log4j2
 public class WebClientProductClient implements ProductClient {
     public static final String URL_PRODUCT = "http://localhost:8081/product/";
+    public static final String PRODUCT_GETNAME_SERVICE = "getName";
+
     private final WebClient webClient;
 
     public WebClientProductClient(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    private Flux<Product> productName(long productId) {
+    private Flux<String> productName(long productId) {
         log.info("WebClient product client");
         return this.webClient.get()
-                .uri(WebClientProductClient.URL_PRODUCT + "{id}", productId)
+                .uri(WebClientProductClient.URL_PRODUCT + WebClientProductClient.PRODUCT_GETNAME_SERVICE + "/{id}", productId)
                 .retrieve()
-                .bodyToFlux(Product.class)
+                .bodyToFlux(String.class)
                 .retryWhen(backoff(5, ofSeconds(1)).maxBackoff(ofSeconds(3)))
                 .doOnError(IOException.class, e -> log.error(e.getMessage()))
         ;
@@ -35,8 +37,7 @@ public class WebClientProductClient implements ProductClient {
 
     @Override
     public String getProductName(long id) {
-        Flux<Product> aProduct = this.productName(id);
-
-        return Objects.requireNonNull(aProduct.blockFirst()).getName();
+        Flux<String> aFluxNameProduct = this.productName(id);
+        return Objects.requireNonNull(aFluxNameProduct.blockFirst());
     }
 }

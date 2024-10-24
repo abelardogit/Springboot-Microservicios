@@ -2,7 +2,6 @@ package com.paymentchain.customer.controller;
 
 import com.paymentchain.customer.controller.helper.CustomerRestControllerHelper;
 import com.paymentchain.customer.entities.Customer;
-import com.paymentchain.customer.entities.CustomerProduct;
 import com.paymentchain.customer.repository.CustomerRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +28,31 @@ public class CustomerRestController {
     public ResponseEntity<?> getById(@PathVariable("id") long id)
     {
         Customer aCustomer = CustomerRestControllerHelper.getById(this.customerRepository, id);
+        return CustomerRestControllerHelper.getResponseEntity(aCustomer);
+    }
+
+    @GetMapping("/fullByCode/{code}")
+    public ResponseEntity<?> getByCode(@PathVariable("code") String code)
+    {
+        Customer aCustomer = customerRepository.getByCode(code);
+
         if (null == aCustomer) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<CustomerProduct> products = aCustomer.getProducts();
-        products.forEach(p -> {
-            long productId = p.getProductId();
-            String productName = CustomerRestControllerHelper.getProductName(productId);
-            p.setProductName(productName);
-        });
+        return CustomerRestControllerHelper.getResponseEntity(aCustomer);
+    }
 
-        return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
+    @GetMapping("/fullByIBAN/{iban}")
+    public ResponseEntity<?> getByIBAN(@PathVariable("iban") String iban)
+    {
+        Customer aCustomer = customerRepository.getByIBAN(iban);
 
+        if (null == aCustomer) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return CustomerRestControllerHelper.getResponseEntity(aCustomer);
     }
 
     @PutMapping()
@@ -78,4 +89,5 @@ public class CustomerRestController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
