@@ -1,7 +1,7 @@
 package com.paymentchain.customer;
 
-import com.paymentchain.customer.http.ProductClient;
-import com.paymentchain.customer.http.WebClientProductClient;
+import com.paymentchain.customer.http.product.ProductClient;
+import com.paymentchain.customer.http.product.WebClientProductClient;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

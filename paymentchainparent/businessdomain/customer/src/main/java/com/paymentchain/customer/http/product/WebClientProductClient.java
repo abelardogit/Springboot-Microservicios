@@ -2,7 +2,7 @@
  * @see https://blog.jetbrains.com/idea/2019/11/tutorial-reactive-spring-boot-a-rest-client-for-reactive-streams/
  **/
 
-package com.paymentchain.customer.http;
+package com.paymentchain.customer.http.product;
 
 import java.io.IOException;
 import static java.time.Duration.ofSeconds;
@@ -26,8 +26,9 @@ public class WebClientProductClient implements ProductClient {
 
     private Flux<String> productName(long productId) {
         log.info("WebClient product client");
+        String url = WebClientProductClient.URL_PRODUCT + WebClientProductClient.PRODUCT_GETNAME_SERVICE + "/{id}";
         return this.webClient.get()
-                .uri(WebClientProductClient.URL_PRODUCT + WebClientProductClient.PRODUCT_GETNAME_SERVICE + "/{id}", productId)
+                .uri(url, productId)
                 .retrieve()
                 .bodyToFlux(String.class)
                 .retryWhen(backoff(5, ofSeconds(1)).maxBackoff(ofSeconds(3)))

@@ -9,8 +9,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.paymentchain.businessdomain.product</groupId>
-    <artifactId>product</artifactId>
+    <groupId>com.paymentchain.businessdomain.transaction</groupId>
+    <artifactId>transaction</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>transaction</name>
 
@@ -22,4 +22,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

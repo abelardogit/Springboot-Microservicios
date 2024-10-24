@@ -28,7 +28,13 @@ public class CustomerRestController {
     public ResponseEntity<?> getById(@PathVariable("id") long id)
     {
         Customer aCustomer = CustomerRestControllerHelper.getById(this.customerRepository, id);
-        return CustomerRestControllerHelper.getResponseEntity(aCustomer);
+        if (null == aCustomer) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        CustomerRestControllerHelper.updateProducts(aCustomer);
+        CustomerRestControllerHelper.updateTransactions(aCustomer);
+
+        return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
 
     @GetMapping("/fullByCode/{code}")
@@ -40,7 +46,10 @@ public class CustomerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return CustomerRestControllerHelper.getResponseEntity(aCustomer);
+        CustomerRestControllerHelper.updateProducts(aCustomer);
+        CustomerRestControllerHelper.updateTransactions(aCustomer);
+
+        return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
 
     @GetMapping("/fullByIBAN/{iban}")
@@ -52,7 +61,10 @@ public class CustomerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return CustomerRestControllerHelper.getResponseEntity(aCustomer);
+        CustomerRestControllerHelper.updateProducts(aCustomer);
+        CustomerRestControllerHelper.updateTransactions(aCustomer);
+
+        return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
 
     @PutMapping()

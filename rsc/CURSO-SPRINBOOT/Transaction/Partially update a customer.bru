@@ -1,0 +1,18 @@
+meta {
+  name: Partially update a customer
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8082/transaction
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 1,
+    "code": "code01"
+  }
+}

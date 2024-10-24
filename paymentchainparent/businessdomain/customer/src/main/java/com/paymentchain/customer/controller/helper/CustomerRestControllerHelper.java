@@ -2,10 +2,9 @@ package com.paymentchain.customer.controller.helper;
 
 import com.paymentchain.customer.entities.Customer;
 import com.paymentchain.customer.entities.CustomerProduct;
-import com.paymentchain.customer.http.WebClientProductClient;
+import com.paymentchain.customer.http.product.WebClientProductClient;
+import com.paymentchain.customer.http.transaction.WebClientTransactionClient;
 import com.paymentchain.customer.repository.CustomerRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -52,11 +51,7 @@ public class CustomerRestControllerHelper {
         return webClientProductClient.getProductName(id);
     }
 
-    public static ResponseEntity<?> getResponseEntity(Customer aCustomer) {
-        if (null == aCustomer) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+    public static void updateProducts(Customer aCustomer) {
         List<CustomerProduct> products = aCustomer.getProducts();
         products.forEach(p -> {
             long productId = p.getProductId();
@@ -64,7 +59,19 @@ public class CustomerRestControllerHelper {
             p.setProductName(productName);
         });
 
-        return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
+
+    }
+
+    public static void updateTransactions(Customer aCustomer) {
+        String anIBAN = aCustomer.getIban();
+        List<?> transactions = CustomerRestControllerHelper.getTransactions(anIBAN);
+        aCustomer.setTransactions(transactions);
+    }
+
+    private static List<?> getTransactions(String iban) {
+        WebClient webClient = WebClient.builder().build();
+        WebClientTransactionClient webClientTransaction = new WebClientTransactionClient(webClient);
+        return webClientTransaction.getTransactionByCustomerIban(iban);
     }
 
 }
