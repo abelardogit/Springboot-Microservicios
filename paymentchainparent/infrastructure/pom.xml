@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>configServer</module>
+        <module>eurekaServer</module>
     </modules>
 
     <properties>
