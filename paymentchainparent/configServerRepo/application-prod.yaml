@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: businessDomain-customer
+  jpa:
+    show-sql: true
+  datasource:
+    url: jdbc:h2:mem:customer
+    username: sa
+    password: qwerty
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: 49152
+
+custom:
+  activeProfileName: production
