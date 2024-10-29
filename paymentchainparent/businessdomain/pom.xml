@@ -22,9 +22,6 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>22</maven.compiler.source>
-        <maven.compiler.target>22</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-cloud-dependencies.version>2023.0.0</spring-cloud-dependencies.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <org.lombo.version>1.18.30</org.lombo.version>
@@ -72,6 +69,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${org.springdoc.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
