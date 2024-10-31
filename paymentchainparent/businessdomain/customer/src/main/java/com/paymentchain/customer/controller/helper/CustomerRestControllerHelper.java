@@ -74,4 +74,8 @@ public class CustomerRestControllerHelper {
         return webClientTransaction.getTransactionByCustomerIban(iban);
     }
 
+    public static void updateAdditionalInfo(Customer aCustomer) {
+        CustomerRestControllerHelper.updateProducts(aCustomer);
+        //CustomerRestControllerHelper.updateTransactions(aCustomer);
+    }
 }
