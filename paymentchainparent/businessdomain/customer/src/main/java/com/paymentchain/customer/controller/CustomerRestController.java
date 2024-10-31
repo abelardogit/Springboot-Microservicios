@@ -47,8 +47,8 @@ public class CustomerRestController {
         if (null == aCustomer) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        CustomerRestControllerHelper.updateProducts(aCustomer);
-        CustomerRestControllerHelper.updateTransactions(aCustomer);
+
+        CustomerRestControllerHelper.updateAdditionalInfo(aCustomer);
 
         return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
@@ -62,8 +62,7 @@ public class CustomerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        CustomerRestControllerHelper.updateProducts(aCustomer);
-        CustomerRestControllerHelper.updateTransactions(aCustomer);
+        CustomerRestControllerHelper.updateAdditionalInfo(aCustomer);
 
         return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
@@ -77,8 +76,7 @@ public class CustomerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        CustomerRestControllerHelper.updateProducts(aCustomer);
-        CustomerRestControllerHelper.updateTransactions(aCustomer);
+        CustomerRestControllerHelper.updateAdditionalInfo(aCustomer);
 
         return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }

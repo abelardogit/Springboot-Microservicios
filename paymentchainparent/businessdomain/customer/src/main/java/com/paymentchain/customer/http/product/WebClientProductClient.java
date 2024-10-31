@@ -15,7 +15,7 @@ import static reactor.util.retry.Retry.backoff;
 
 @Log4j2
 public class WebClientProductClient implements ProductClient {
-    public static final String URL_PRODUCT = "http://localhost:8081/product/";
+    public static final String URL_PRODUCT = "http://BUSINESSDOMAIN-PRODUCT/product";
     public static final String PRODUCT_GETNAME_SERVICE = "getName";
 
     private final WebClient webClient;
