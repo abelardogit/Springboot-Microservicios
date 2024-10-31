@@ -4,15 +4,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.paymentchain.businessdomain</groupId>
-        <artifactId>businessdomain</artifactId>
+        <groupId>com.paymentchain.infrastructure</groupId>
+        <artifactId>infrastructure</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.paymentchain</groupId>
-    <artifactId>product</artifactId>
+    <artifactId>configServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>product</name>
+    <name>configServer</name>
+    <description>Demo project for Spring Boot</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-config-server</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -22,4 +30,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
