@@ -5,11 +5,13 @@ import com.paymentchain.customer.entities.CustomerProduct;
 import com.paymentchain.customer.http.product.WebClientProductClient;
 import com.paymentchain.customer.http.transaction.WebClientTransactionClient;
 import com.paymentchain.customer.repository.CustomerRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CustomerRestControllerHelper {
 
     public static Customer getById(CustomerRepository customerRepository, long id)

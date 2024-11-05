@@ -20,7 +20,7 @@ public class StandarizedApiExceptionResponse {
         this.instance = instance;
     }
 
-    public static StandarizedApiExceptionResponse create(String type, String title, String code, String detail, String instance) {
-        return new StandarizedApiExceptionResponse(type, title, code, detail, instance);
+    public static StandarizedApiExceptionResponse create(String[] params) {
+        return new StandarizedApiExceptionResponse(params[0], params[1], params[2], params[3], params[4]);
     }
 }

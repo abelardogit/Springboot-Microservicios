@@ -53,8 +53,6 @@ public class CustomerRestController {
             return ResponseEntity.noContent().build();
         }
 
-        CustomerRestControllerHelper.updateAdditionalInfo(aCustomer);
-
         return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
 
@@ -111,13 +109,11 @@ public class CustomerRestController {
         if (null == aCustomer) {
             return ResponseEntity.badRequest().build();
         }
-        try {
-            aCustomer.getProducts().forEach(product -> product.setCustomer(aCustomer));
-            Customer savedCustomer = this.customerRepository.save(aCustomer);
-            return ResponseEntity.ok(savedCustomer);
-        } catch(Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        aCustomer.getProducts().forEach(product -> product.setCustomer(aCustomer));
+        Customer savedCustomer = this.customerRepository.save(aCustomer);
+
+        return ResponseEntity.ok(savedCustomer);
     }
 
     @DeleteMapping("/{id}")
