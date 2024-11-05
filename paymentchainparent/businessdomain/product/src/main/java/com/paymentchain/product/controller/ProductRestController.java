@@ -33,7 +33,7 @@ public class ProductRestController {
     {
         Product aProduct = ProductRestControllerHelper.getById(this.productRepository, id);
         if (null == aProduct) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
 
         return new ResponseEntity<>(aProduct, HttpStatus.FOUND);
