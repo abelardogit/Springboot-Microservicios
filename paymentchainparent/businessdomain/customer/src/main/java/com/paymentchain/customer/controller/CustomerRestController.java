@@ -2,6 +2,7 @@ package com.paymentchain.customer.controller;
 
 import com.paymentchain.customer.controller.helper.CustomerRestControllerHelper;
 import com.paymentchain.customer.entities.Customer;
+import com.paymentchain.customer.exceptions.BusinessRuleException;
 import com.paymentchain.customer.repository.CustomerRepository;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.UnknownHostException;
 import java.util.List;
 
 @RestController
@@ -36,14 +38,19 @@ public class CustomerRestController {
         return "Hello, your current environment is " + this.env.getProperty("custom.activeProfileName");
     }
 
-    @GetMapping()
-    public ResponseEntity<List<Customer>> list() {
-        List<Customer> customers = this.customerRepository.findAll();
-        if (customers.isEmpty()) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") int id)
+    {
+        Customer aCustomerFromBD = CustomerRestControllerHelper.getById(this.customerRepository, id);
+        if (null == aCustomerFromBD) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(customers);
+        this.customerRepository.delete(aCustomerFromBD);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") long id)
@@ -84,6 +91,21 @@ public class CustomerRestController {
         return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<Customer>> list() {
+        List<Customer> customers = this.customerRepository.findAll();
+        if (customers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(customers);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> post(@RequestBody Customer aCustomer) throws BusinessRuleException, UnknownHostException {
+        Customer savedCustomer = CustomerRestControllerHelper.post(this.customerRepository, aCustomer);
+        return ResponseEntity.ok(savedCustomer);
+    }
+
     @PutMapping()
     public ResponseEntity<?> put(@RequestBody Customer customer)
     {
@@ -104,28 +126,8 @@ public class CustomerRestController {
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody Customer aCustomer) {
-        if (null == aCustomer) {
-            return ResponseEntity.badRequest().build();
-        }
 
-        aCustomer.getProducts().forEach(product -> product.setCustomer(aCustomer));
-        Customer savedCustomer = this.customerRepository.save(aCustomer);
 
-        return ResponseEntity.ok(savedCustomer);
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") int id)
-    {
-        Customer aCustomerFromBD = CustomerRestControllerHelper.getById(this.customerRepository, id);
-        if (null == aCustomerFromBD) {
-            return ResponseEntity.noContent().build();
-        }
-        this.customerRepository.delete(aCustomerFromBD);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
 }

@@ -1,8 +1,6 @@
-package com.paymentchain.customer.common;
+package com.paymentchain.customer.exceptions;
 
-import org.apache.coyote.Response;
-import org.apache.http.protocol.HTTP;
-import org.springframework.http.HttpStatus;
+import com.paymentchain.customer.common.StandarizedApiExceptionResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,5 +13,12 @@ public class ApiExceptionHandler {
         String[] params = {"TECNICO", "I/O Error", "1024", exc.getMessage(), ""};
         StandarizedApiExceptionResponse standarizedApiExceptionResponse = StandarizedApiExceptionResponse.create(params);
         return ResponseEntity.internalServerError().body(standarizedApiExceptionResponse);
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<StandarizedApiExceptionResponse> handlerUnknownHostException(BusinessRuleException bre) {
+        String[] params = {"NEGOCIO", "Precondition failed", bre.getCode(), bre.getMessage(), ""};
+        StandarizedApiExceptionResponse standarizedApiExceptionResponse = StandarizedApiExceptionResponse.create(params);
+        return new ResponseEntity<>(standarizedApiExceptionResponse, bre.getHttpStatus());
     }
 }

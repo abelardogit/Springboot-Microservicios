@@ -6,10 +6,17 @@ package com.paymentchain.customer.http.product;
 
 import java.io.IOException;
 import static java.time.Duration.ofSeconds;
+
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.Objects;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import static reactor.util.retry.Retry.backoff;
 
@@ -40,5 +47,12 @@ public class WebClientProductClient implements ProductClient {
     public String getProductName(long id) {
         Flux<String> aFluxNameProduct = this.productName(id);
         return Objects.requireNonNull(aFluxNameProduct.blockFirst());
+    }
+
+    public String getNotFoundProductName(long id, boolean is404) throws UnknownHostException {
+        if (is404) {
+           return "";
+        }
+        throw new UnknownHostException("Not product name with id " + id + " was found");
     }
 }
