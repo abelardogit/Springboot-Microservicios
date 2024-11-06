@@ -1,6 +1,8 @@
 package com.paymentchain.billing.controller;
 
 import com.paymentchain.billing.controller.helper.BillingRestControllerHelper;
+import com.paymentchain.billing.dto.InvoiceRequest;
+import com.paymentchain.billing.dto.InvoiceResponse;
 import com.paymentchain.billing.entities.Invoice;
 import com.paymentchain.billing.repository.BillingRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +30,9 @@ public class BillingRestController {
             @ApiResponse(responseCode = "204", description = "No hay datos"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")})
     @GetMapping()
-    public List<Invoice> list()
+    public List<InvoiceResponse> list()
     {
-        return this.billingRepository.findAll();
+        List<Invoice> invoices =  this.billingRepository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -46,7 +48,7 @@ public class BillingRestController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> put(@RequestBody Invoice billing)
+    public ResponseEntity<?> put(@RequestBody InvoiceRequest billing)
     {
         long billingId = billing.getId();
         Invoice aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, billingId);
@@ -62,7 +64,7 @@ public class BillingRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Invoice aBilling)
+    public ResponseEntity<?> post(@RequestBody InvoiceRequest aBilling)
     {
         Invoice savedBilling = this.billingRepository.save(aBilling);
         return ResponseEntity.ok(savedBilling);
