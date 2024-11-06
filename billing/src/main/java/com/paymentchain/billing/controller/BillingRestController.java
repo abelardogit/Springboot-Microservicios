@@ -1,7 +1,7 @@
 package com.paymentchain.billing.controller;
 
 import com.paymentchain.billing.controller.helper.BillingRestControllerHelper;
-import com.paymentchain.billing.entities.Billing;
+import com.paymentchain.billing.entities.Invoice;
 import com.paymentchain.billing.repository.BillingRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class BillingRestController {
     }
 
     @GetMapping()
-    public List<Billing> list()
+    public List<Invoice> list()
     {
         return this.billingRepository.findAll();
     }
@@ -28,7 +28,7 @@ public class BillingRestController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") long id)
     {
-        Billing aBilling = BillingRestControllerHelper.getById(this.billingRepository, id);
+        Invoice aBilling = BillingRestControllerHelper.getById(this.billingRepository, id);
         if (null == aBilling) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -38,15 +38,15 @@ public class BillingRestController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> put(@RequestBody Billing billing)
+    public ResponseEntity<?> put(@RequestBody Invoice billing)
     {
         long billingId = billing.getId();
-        Billing aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, billingId);
+        Invoice aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, billingId);
         if (null == aBillingFromBD) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Billing updatedBilling = BillingRestControllerHelper.update(aBillingFromBD, billing);
+        Invoice updatedBilling = BillingRestControllerHelper.update(aBillingFromBD, billing);
 
         this.billingRepository.save(updatedBilling);
 
@@ -54,16 +54,16 @@ public class BillingRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Billing aBilling)
+    public ResponseEntity<?> post(@RequestBody Invoice aBilling)
     {
-        Billing savedBilling = this.billingRepository.save(aBilling);
+        Invoice savedBilling = this.billingRepository.save(aBilling);
         return ResponseEntity.ok(savedBilling);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id)
     {
-        Billing aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, id);
+        Invoice aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, id);
         if (null == aBillingFromBD) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
