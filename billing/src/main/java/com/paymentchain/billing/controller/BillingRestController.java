@@ -3,6 +3,9 @@ package com.paymentchain.billing.controller;
 import com.paymentchain.billing.controller.helper.BillingRestControllerHelper;
 import com.paymentchain.billing.entities.Invoice;
 import com.paymentchain.billing.repository.BillingRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,11 @@ public class BillingRestController {
         this.billingRepository = billingRepository;
     }
 
+    @Operation(description="Return all invoices bundled into a response")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Éxito"),
+            @ApiResponse(responseCode = "204", description = "No hay datos"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")})
     @GetMapping()
     public List<Invoice> list()
     {
