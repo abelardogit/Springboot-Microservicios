@@ -118,6 +118,7 @@ public class BillingRestController {
     @Operation(description="Creates an invoice")
     @ApiResponses(value={
             @ApiResponse(responseCode = "200", description = "Éxito"),
+            @ApiResponse(responseCode = "403", description = "Operación no permitida: ¿eres admin?"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")}
     )
     @PostMapping()

@@ -1,13 +1,16 @@
 package com.paymentchain.billing;
 
+import com.paymentchain.billing.config.SecurityConfiguration;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
-@SpringBootApplication
+@SpringBootApplication()
 public class BillingApplication {
 
 	public static void main(String[] args) {
