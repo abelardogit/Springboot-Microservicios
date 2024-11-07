@@ -1,84 +1,134 @@
 package com.paymentchain.billing.controller;
 
+import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.paymentchain.billing.common.InvoiceRequestMapper;
+import com.paymentchain.billing.common.InvoiceResponseMapper;
 import com.paymentchain.billing.controller.helper.BillingRestControllerHelper;
 import com.paymentchain.billing.dto.InvoiceRequest;
 import com.paymentchain.billing.dto.InvoiceResponse;
 import com.paymentchain.billing.entities.Invoice;
 import com.paymentchain.billing.repository.BillingRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Tag(name="Billing API", description = "This APi serves all functionality for management Invoices")
 @RestController
 @RequestMapping("/billing")
 public class BillingRestController {
 
     private final BillingRepository billingRepository;
+    private final InvoiceResponseMapper invoiceResponseMapperImpl;
+    private final InvoiceRequestMapper invoiceRequestMapperImpl;
 
-    public BillingRestController(BillingRepository billingRepository) {
+    public BillingRestController(
+            BillingRepository billingRepository,
+            InvoiceResponseMapper invoiceRequestMapper,
+            InvoiceRequestMapper invoiceResponseMapper
+    ) {
         this.billingRepository = billingRepository;
+        this.invoiceResponseMapperImpl = invoiceRequestMapper;
+        this.invoiceRequestMapperImpl = invoiceResponseMapper;
+    }
+
+    @Operation(description="Deletes an invoice")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Éxito"),
+            @ApiResponse(responseCode = "204", description = "No se ha encontrado la factura con el id proporcionado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")}
+    )
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") String id)
+    {
+        Invoice aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, Long.parseLong(id));
+        if (null == aBillingFromBD) {
+            return ResponseEntity.noContent().build();
+        }
+        this.billingRepository.delete(aBillingFromBD);
+
+        return ResponseEntity.ok().build();
     }
 
     @Operation(description="Return all invoices bundled into a response")
     @ApiResponses(value={
             @ApiResponse(responseCode = "200", description = "Éxito"),
             @ApiResponse(responseCode = "204", description = "No hay datos"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")})
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")}
+    )
     @GetMapping()
-    public List<InvoiceResponse> list()
+    public ResponseEntity<List<InvoiceResponse>> list()
     {
         List<Invoice> invoices =  this.billingRepository.findAll();
+        if (invoices.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(invoiceResponseMapperImpl.invoiceListToInvoiceResponseList(invoices));
     }
 
+    @Operation(description="Return an invoice by id provided")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Éxito"),
+            @ApiResponse(responseCode = "204", description = "No se ha encontrado la factura con el id proporcionado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")}
+    )
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") long id)
+    public ResponseEntity<InvoiceResponse> getById(@PathVariable("id") long id)
     {
         Invoice aBilling = BillingRestControllerHelper.getById(this.billingRepository, id);
         if (null == aBilling) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(aBilling, HttpStatus.FOUND);
+        InvoiceResponse invoiceResponse = invoiceResponseMapperImpl.invoiceToInvoiceResponse(aBilling);
+        return new ResponseEntity<>(invoiceResponse, HttpStatus.FOUND);
 
     }
 
-    @PutMapping()
-    public ResponseEntity<?> put(@RequestBody InvoiceRequest billing)
+    @Operation(description="Update an invoice by id provided")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Éxito"),
+            @ApiResponse(responseCode = "204", description = "No se ha encontrado la factura con el id proporcionado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")}
+    )
+    @PutMapping("/{id}")
+    public ResponseEntity<InvoiceResponse> put(@PathVariable("id") String id, @RequestBody InvoiceRequest billingRequest)
     {
-        long billingId = billing.getId();
-        Invoice aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, billingId);
+        Invoice aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, Long.parseLong(id));
         if (null == aBillingFromBD) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.noContent().build();
         }
 
-        Invoice updatedBilling = BillingRestControllerHelper.update(aBillingFromBD, billing);
+        Invoice fromUser = invoiceRequestMapperImpl.invoiceRequestToInvoice(billingRequest);
+
+        Invoice updatedBilling = BillingRestControllerHelper.update(aBillingFromBD, fromUser);
 
         this.billingRepository.save(updatedBilling);
 
-        return new ResponseEntity<>(updatedBilling, HttpStatus.OK);
+        InvoiceResponse invoiceResponse = invoiceResponseMapperImpl.invoiceToInvoiceResponse(updatedBilling);
+
+        return new ResponseEntity<>(invoiceResponse, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody InvoiceRequest aBilling)
+    @Operation(description="Creates an invoice")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "Éxito"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")}
+    )
+    @PostMapping()
+    public ResponseEntity<InvoiceResponse> post(@RequestBody InvoiceRequest aBillingRequest)
     {
+        Invoice aBilling = invoiceRequestMapperImpl.invoiceRequestToInvoice(aBillingRequest);
         Invoice savedBilling = this.billingRepository.save(aBilling);
-        return ResponseEntity.ok(savedBilling);
+
+        InvoiceResponse aBillingResponse = invoiceResponseMapperImpl.invoiceToInvoiceResponse(savedBilling);
+        return ResponseEntity.ok(aBillingResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") int id)
-    {
-        Invoice aBillingFromBD = BillingRestControllerHelper.getById(this.billingRepository, id);
-        if (null == aBillingFromBD) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        this.billingRepository.delete(aBillingFromBD);
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
