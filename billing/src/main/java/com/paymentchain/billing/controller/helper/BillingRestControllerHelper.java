@@ -1,43 +1,36 @@
 package com.paymentchain.billing.controller.helper;
 
-import com.paymentchain.billing.entities.Billing;
+import com.paymentchain.billing.entities.Invoice;
 import com.paymentchain.billing.repository.BillingRepository;
 
 import java.util.Optional;
 
 public class BillingRestControllerHelper {
 
-    public static Billing getById(BillingRepository billingRepository, long id)
+    public static Invoice getById(BillingRepository billingRepository, long id)
     {
-        Optional<Billing> optionalBilling = billingRepository.findById(id);
+        Optional<Invoice> optionalBilling = billingRepository.findById(id);
         return optionalBilling.orElse(null);
     }
 
-    public static Billing update(Billing fromBD, Billing fromUser)
+    public static Invoice update(Invoice fromBD, Invoice fromUser)
     {
-        Billing updatedBilling = new Billing();
+        Invoice updatedBilling = new Invoice();
         updatedBilling.setId(fromBD.getId());
-        Billing from;
-        if (null != fromUser.getCode()) {
+        Invoice from;
+        if (null != fromUser.getNumber()) {
             from = fromUser;
         } else {
             from = fromBD;
         }
-        updatedBilling.setCode(from.getCode());
+        updatedBilling.setNumber(from.getNumber());
 
-        if (null != fromUser.getPhone()) {
+        if (null != fromUser.getDetail()) {
             from = fromUser;
         } else {
             from = fromBD;
         }
-        updatedBilling.setPhone(from.getPhone());
-
-        if (null != fromUser.getName()) {
-            from = fromUser;
-        } else {
-            from = fromBD;
-        }
-        updatedBilling.setName(from.getName());
+        updatedBilling.setDetail(from.getDetail());
 
         return updatedBilling;
     }
