@@ -144,3 +144,60 @@ eureka.client.fetch-registry=true
     public static final String PRODUCT_SERVICE = "http://BUSINESSDOMAIN-PRODUCT/product";
 ```
 
+## Load balancer
+1. Start the services in the following order:
+- Eureka
+```shell
+# cd to the root of the project
+java -jar paymentchainparent/infrastructure/eurekaServer/target/eurekaServer-0.0.1-SNAPSHOT.jar
+```
+- Config server if apply
+```shell
+# cd to the root of the project
+java -jar paymentchainparent/infrastructure/configServer/target/configServer-0.0.1-SNAPSHOT.jar
+```
+- Product
+```shell
+# cd to the root of the project
+java -jar paymentchainparent/businessdomain/product/target/product-0.0.1-SNAPSHOT.jar 
+``` 
+- Customer
+```shell
+# cd to the root of the project
+java -jar paymentchainparent/businessdomain/customer/target/customer-0.0.1-SNAPSHOT.jar
+```
+2. Browse to [Eureka](http://localhost:8761) to see the services registered
+3. Create a new [product](http://localhost:8081/swagger-ui.html) and [customer](http://localhost:8080/business/V2/swagger-ui.html)
+```json
+{
+  "id": 0,
+  "code": "TA01",
+  "name": "Tarjeta Credito"
+}
+```
+```json
+{
+  "id": 0,
+  "code": "CU02",
+  "name": "Cuenta corriente"
+}
+```
+```json
+{
+    "id": 1,
+    "code": "CU02",
+    "iban": "ES7620770024003102575766",
+    "name": "John",
+    "surname": "Doe",
+    "phone": "+34123456789",
+    "address": "123 Main St, Madrid, Spain",
+    "products": [
+        {
+            "id": 1        
+        }
+    ]
+}
+```
+4. Check the logs of the services to see if there is any error.
+At this case tehre found several erros triying to connect to product across the eureka server, because the webclinet was not configured properly and webClientProductClient was not using the correct instance the load balancer, it was using the instance created when CustomerRestControllerHelper call teh method getProductName.
+The Solution was inject WebClient.Builder on CustomerRestControllerHelper, it was created on CustomerConfiguration class as bean.

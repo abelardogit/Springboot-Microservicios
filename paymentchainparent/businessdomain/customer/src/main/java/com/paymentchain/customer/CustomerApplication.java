@@ -11,12 +11,5 @@ public class CustomerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CustomerApplication.class, args);
-    }
-
-    @Bean
-    @LoadBalanced
-    public WebClient.Builder loadBalancedWebClientBuilder() {
-        System.out.println(WebClient.builder());
-        return WebClient.builder();
-    }
+    }   
 }

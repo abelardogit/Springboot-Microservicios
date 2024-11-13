@@ -18,29 +18,35 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class CustomerRestControllerHelper {
 
-    public static Customer getById(CustomerRepository customerRepository, long id)
+    @Autowired
+    private WebClient.Builder webClient;
+            
+    public Customer getById(CustomerRepository customerRepository, long id)
     {
         Optional<Customer> optionalCustomer = customerRepository.findById(id);
         return optionalCustomer.orElse(null);
     }
+    
+    
 
-    public static String getProductName(long id) {
-        WebClient webClient = WebClient.builder().build();
+    public  String getProductName(long id) {
+       // WebClient webClient = WebClient.builder().build();
         WebClientProductClient webClientProductClient = new WebClientProductClient(webClient);
         return webClientProductClient.getProductName(id);
     }
 
-    public static String getNotFoundProductName(long id) throws UnknownHostException {
-        WebClient webClient = WebClient.builder().build();
+    public String getNotFoundProductName(long id) throws UnknownHostException {
+       // WebClient webClient = WebClient.builder().build();
         WebClientProductClient webClientProductClient = new WebClientProductClient(webClient);
         return webClientProductClient.getNotFoundProductName(id, true);
     }
 
-    public static Customer post(CustomerRepository customerRepository, Customer aCustomer) throws BusinessRuleException, UnknownHostException {
+    public Customer post(CustomerRepository customerRepository, Customer aCustomer) throws BusinessRuleException, UnknownHostException {
         if (null == aCustomer) {
             Object[] params = {"1025", "Customer not provided", HttpStatus.PRECONDITION_FAILED};
             throw BusinessRuleException.fromCode(params);
@@ -96,8 +102,8 @@ public class CustomerRestControllerHelper {
         return updatedCustomer;
     }
 
-    public static void updateAdditionalInfo(Customer aCustomer) {
-        CustomerRestControllerHelper.updateProducts(aCustomer);
+    public  void updateAdditionalInfo(Customer aCustomer) {
+        updateProducts(aCustomer);
         //CustomerRestControllerHelper.updateTransactions(aCustomer);
     }
 
@@ -107,7 +113,7 @@ public class CustomerRestControllerHelper {
         return webClientTransaction.getTransactionByCustomerIban(iban);
     }
 
-    private static void updateProducts(Customer aCustomer) {
+    private  void updateProducts(Customer aCustomer) {
         List<CustomerProduct> products = aCustomer.getProducts();
         products.forEach(p -> {
             long productId = p.getProductId();
@@ -115,7 +121,7 @@ public class CustomerRestControllerHelper {
             String productName = null;
             try {
                 // Fake
-                productName = CustomerRestControllerHelper.getNotFoundProductName(productId);
+                productName = getNotFoundProductName(productId);
             } catch (UnknownHostException e) {
                 Logger.getLogger(CustomerRestControllerHelper.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -123,7 +129,7 @@ public class CustomerRestControllerHelper {
         });
     }
 
-    private static void updateTransactions(Customer aCustomer) {
+    private  void updateTransactions(Customer aCustomer) {
         String anIBAN = aCustomer.getIban();
         List<?> transactions = CustomerRestControllerHelper.getTransactions(anIBAN);
         aCustomer.setTransactions(transactions);
