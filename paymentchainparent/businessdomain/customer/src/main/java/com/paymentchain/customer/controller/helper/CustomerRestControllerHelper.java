@@ -54,8 +54,8 @@ public class CustomerRestControllerHelper {
         boolean notFound = false; long idNotFound = -1;
         while(customerProductIterator.hasNext() && !notFound) {
             CustomerProduct customerProduct = customerProductIterator.next();
-//            String productName = getProductName(customerProduct.getId());
-            String productName = getNotFoundProductName(customerProduct.getId());
+            String productName = getProductName(customerProduct.getId());
+           // String productName = getNotFoundProductName(customerProduct.getId());
             notFound = (null == productName) || productName.isEmpty();
             idNotFound = customerProduct.getId();
         }
