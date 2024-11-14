@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.net.UnknownHostException;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/customer/v1")
@@ -20,14 +21,19 @@ public class CustomerRestController {
     private final CustomerRepository customerRepository;
     private final Environment env;
 
-    public CustomerRestController(
-            CustomerRepository customerRepository,
-            Environment env
+    @Autowired
+    public CustomerRestController(CustomerRepository customerRepository,Environment env
     ) {
         this.customerRepository = customerRepository;
         this.env = env;
     }
+     @Autowired
+    CustomerRestControllerHelper controllerHelper;
 
+    public CustomerRestController() {
+        this.customerRepository = null;
+        this.env = null;
+    }
     /*
     @Value("${custom.activeProfileName}")
     private String profile;
@@ -41,7 +47,7 @@ public class CustomerRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id)
     {
-        Customer aCustomerFromBD = CustomerRestControllerHelper.getById(this.customerRepository, id);
+        Customer aCustomerFromBD = controllerHelper.getById(this.customerRepository, id);
         if (null == aCustomerFromBD) {
             return ResponseEntity.noContent().build();
         }
@@ -55,7 +61,7 @@ public class CustomerRestController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") long id)
     {
-        Customer aCustomer = CustomerRestControllerHelper.getById(this.customerRepository, id);
+        Customer aCustomer = controllerHelper.getById(this.customerRepository, id);
         if (null == aCustomer) {
             return ResponseEntity.noContent().build();
         }
@@ -72,7 +78,7 @@ public class CustomerRestController {
             return ResponseEntity.noContent().build();
         }
 
-        CustomerRestControllerHelper.updateAdditionalInfo(aCustomer);
+        controllerHelper.updateAdditionalInfo(aCustomer);
 
         return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
@@ -86,7 +92,7 @@ public class CustomerRestController {
             return ResponseEntity.noContent().build();
         }
 
-        CustomerRestControllerHelper.updateAdditionalInfo(aCustomer);
+        controllerHelper.updateAdditionalInfo(aCustomer);
 
         return new ResponseEntity<>(aCustomer, HttpStatus.FOUND);
     }
@@ -102,7 +108,7 @@ public class CustomerRestController {
 
     @PostMapping
     public ResponseEntity<?> post(@RequestBody Customer aCustomer) throws BusinessRuleException, UnknownHostException {
-        Customer savedCustomer = CustomerRestControllerHelper.post(this.customerRepository, aCustomer);
+        Customer savedCustomer = controllerHelper.post(this.customerRepository, aCustomer);
         return ResponseEntity.ok(savedCustomer);
     }
 
@@ -114,7 +120,7 @@ public class CustomerRestController {
         }
 
         long customerId = customer.getId();
-        Customer aCustomerFromBD = CustomerRestControllerHelper.getById(this.customerRepository, customerId);
+        Customer aCustomerFromBD = controllerHelper.getById(this.customerRepository, customerId);
         if (null == aCustomerFromBD) {
             return ResponseEntity.noContent().build();
         }

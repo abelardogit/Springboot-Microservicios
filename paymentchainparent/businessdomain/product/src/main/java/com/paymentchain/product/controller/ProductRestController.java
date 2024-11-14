@@ -50,7 +50,7 @@ public class ProductRestController {
 
         String name = aProduct.getName();
 
-        return new ResponseEntity<>(name, HttpStatus.FOUND);
+        return new ResponseEntity<>(name, HttpStatus.OK);
 
     }
 
